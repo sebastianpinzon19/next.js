@@ -1,0 +1,57 @@
+.StyleCard {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 100%; /* Ancho completo en pantallas pequeñas */
+    margin-bottom: 1rem; /* Ajusta según tu tema */
+    border-radius: 20px; /* Bordes más redondeados */
+    background-color: #f9f9f9; /* Fondo suave para las tarjetas */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra de estilo interno */
+}
+
+.StyleCard:hover {
+    transform: translateY(-8px); /* Moviendo suave al hover */
+}
+
+.ActionButton {
+    margin: 1rem; /* Ajusta según tu tema */
+    padding: 1.5rem;
+    font-size: 0.875rem;
+    text-transform: none;
+    border-radius: large;
+    transition: background-color 0.3s ease;
+}
+
+.ActivatedButton {
+    background-color: #acfa50;
+    color: #fff;
+}
+
+.ActivatedButton:hover {
+    background-color: #388e3c;
+}
+
+.DeactivatedButton {
+    background-color: #f9f9f9;
+    color: #fff;
+}
+
+.DeactivatedButton:hover {
+    background-color: #f57c00;
+}
+
+.DeleteButton {
+    background-color: #f44336;
+    color: #fff;
+}
+
+.DeleteButton:hover {
+    background-color: #d32f2f;
+}
+
+.UpdateButton {
+    background-color: #2196f3;
+    color: #fff;
+}
+
+.UpdateButton:hover {
+    background-color: #1976d2;
+}
