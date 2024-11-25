@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import React, { useState, useEffect } from "react";
 import {
   Container,
@@ -14,51 +14,82 @@ import {
   TextField,
   Snackbar,
   Alert,
-} from '@mui/material';
-import styles from './ListaProveedores.module.css';
+} from "@mui/material";
+import { styled } from "@mui/system";
 
 // Estilo para las tarjetas dinámicas
-const StyleCard = ({ children }) => (
-  <Card className={styles.StyleCard}>
-    <CardContent>{children}</CardContent>
-  </Card>
-);
+const StyledCard = styled(Card)(({ theme }) => ({
+  transform: "transform 0.3s ease, box-shadow 0.3s ease",
+  "&:hover": {
+    transform: "translateY(-5px)", // Movimiento suave al hacer hover
+  },
+  height: "100%", // Altura completa en pantallas pequeñas
+  minHeight: "200px",
+  borderRadius: "20px", // Bordes más redondeados
+  backgroundColor: "#fff", // Fondo suave para las tarjetas
+  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // Sombra suave
+  [theme.breakpoints.up("s")]: {
+    margin: "8px", // Divide los elementos medianos y grandes
+  },
+  margin: "auto", // Centrado horizontal en pantallas más grandes
+}));
 
 // Estilo para los botones de acción personalizados
-const ActionButton = ({ children, className, ...props }) => (
-  <Button className={`${styles.ActionButton} ${className}`} {...props}>
-    {children}
-  </Button>
-);
+const ActionButton = styled(Button)(({ theme }) => ({
+  margin: theme.spacing(1),
+  padding: theme.spacing(1),
+  fontSize: "0.875rem",
+  minHeight: "36px",
+  textTransform: "none",
+  borderRadius: "18px",
+  transition: "background-color 0.3s ease",
+}));
 
-const ActivatedButton = (props) => (
-  <ActionButton className={styles.ActivatedButton} {...props} />
-);
+const ActivateButton = styled(ActionButton)({
+  backgroundColor: "#4caf50",
+  color: "#fff",
+  "&:hover": {
+    backgroundColor: "#388e3c",
+  },
+});
 
-const DeactivatedButton = (props) => (
-  <ActionButton className={styles.DeactivatedButton} {...props} />
-);
+const DeactivateButton = styled(ActionButton)({
+  backgroundColor: "#f44336",
+  color: "#fff",
+  "&:hover": {
+    backgroundColor: "#d32f2b",
+  },
+});
 
-const DeleteButton = (props) => (
-  <ActionButton className={styles.DeleteButton} {...props} />
-);
+const DeleteButton = styled(ActionButton)({
+  backgroundColor: "#ff4400",
+  color: "#fff",
+  "&:hover": {
+    backgroundColor: "#d32f2f",
+  },
+});
 
-const UpdateButton = (props) => (
-  <ActionButton className={styles.UpdateButton} {...props} />
-);
+const UpdateButton = styled(ActionButton)({
+  backgroundColor: "#2196f3",
+  color: "#fff",
+  "&:hover": {
+    backgroundColor: "#1976d2",
+  },
+});
 
-const ListaProveedores = () => {
-  const [proveedores, setproveedores] = useState([]);
+const ProveedorLista = () => {
+  const [proveedores, setProveedores] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [formValues, setFormValues] = useState({
-    nombre_proveedor: "",
-    email_proveedor: "",
+    nombre: "",
+    mail_proveedor: "",
     celular_proveedor: "",
     activo_proveedor: true,
   });
+  const [selectedProveedor, setSelectedProveedor] = useState(null);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [actionType, setActionType] = useState<'create' | 'update'>('create');
+  const [actionType, setActionType] = useState('create');
 
   useEffect(() => {
     fetchProveedores();
@@ -67,17 +98,19 @@ const ListaProveedores = () => {
   const fetchProveedores = async () => {
     try {
       const respuesta = await fetch('http://localhost:2000/api/proveedores');
-      if (!respuesta.ok) throw new Error('Error al obtener todos los proveedores');
       const data = await respuesta.json();
-      setproveedores(data);
+      if (respuesta.ok) {
+        setProveedores(data);
+      }
     } catch (error) {
-      console.error('Error al obtener los proveedores: ', error);
+      console.error('Error al obtener los proveedores:', error);
       setErrorMessage('Error al obtener los proveedores');
       setOpenSnackbar(true);
     }
-  };
+  }
 
   const handleOpenModal = (proveedor = null) => {
+    setSelectedProveedor(proveedor);
     if (proveedor) {
       setFormValues({
         nombre_proveedor: proveedor.nombre_proveedor,
@@ -100,9 +133,67 @@ const ListaProveedores = () => {
 
   const handleCloseModal = () => {
     setOpenModal(false);
+    setSelectedProveedor(null);
   };
 
-  const handleDelete = async (id) => {
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues({
+      ...formValues,
+      [name]: value,
+    });
+  };
+
+  const handleSaveProveedor = async () => {
+    try {
+      let url;
+      let method;
+      if (actionType === 'create') {
+        url = 'http://localhost:2000/api/proveedores';
+        method = 'POST';
+      } else {
+        url = `http://localhost:2000/api/proveedores/update/${selectedProveedor.id}`;
+        method = 'PUT';
+      }
+      const response = await fetch(url, {
+        method: method,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formValues),
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Error al guardar el proveedor');
+      }
+      fetchProveedores();
+      handleCloseModal();
+    } catch (error) {
+      console.error('Error al guardar el proveedor:', error);
+      setErrorMessage('Error al guardar el proveedor');
+      setOpenSnackbar(true);
+    }
+  };
+
+  const handleActivate = async function(id) {
+    try {
+      await fetch(`http://localhost:2000/api/proveedores/active/${id}`, { method: 'PUT' });
+      fetchProveedores();
+    } catch (error) {
+      console.error('Error al activar el proveedor:', error);
+    }
+  };
+
+  const handleDeactivate = async function(id) {
+    try {
+      await fetch(`http://localhost:2000/api/proveedores/deactive/${id}`, { method: 'PUT' });
+      fetchProveedores();
+    } catch (error) {
+      console.error('Error al desactivar el proveedor:', error);
+    }
+  };
+
+  const handleDelete = async function(id) {
     try {
       await fetch(`http://localhost:2000/api/proveedores/delete/${id}`, { method: 'DELETE' });
       fetchProveedores();
@@ -119,52 +210,65 @@ const ListaProveedores = () => {
   return (
     <Container maxWidth="lg" style={{ marginTop: "100px" }}>
       <section style={{
-        background: 'linear-gradient(135deg, #6a1cb 0%, #2575fc 100%)',
-        padding: "20px",
-        borderRadius: "10px",
-        color: "#fff"
+        background: "linear-gradient(135deg, #6a11cb 0%, #2575fc 100%)", // Gradiente de colores
+        padding: "20px", // Espaciado interno
+        borderRadius: "10px", // Bordes redondeados
+        color: "#fff" // Color del texto
       }}>
         <Button
           variant="contained"
           color="primary"
           onClick={() => handleOpenModal()}
-          style={{ marginBottom: "30px" }}
+          style={{ marginBottom: "30px" }} // Espaciado adicional
         >
           Crear Proveedor
         </Button>
+        <Grid container spacing={4}>
+          {proveedores.map((proveedor) => (
+            <Grid item xs={12} md={6} key={proveedor._id}>
+              <StyledCard>
+                <CardContent>
+                  <Typography variant="h6" component="div" gutterBottom>
+                    {proveedor.nombre_proveedor}
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    Email: {proveedor.email_proveedor}
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    Celular: {proveedor.celular_proveedor}
+                  </Typography>
+                  <Typography 
+                    variant="body2"
+                    style={{
+                      color: proveedor.activo_proveedor ? "#4caf50" : "#f44336", // Verde si está activo, rojo si está inactivo
+                      fontWeight: "bold"
+                    }}
+                  >
+                    {proveedor.activo_proveedor ? "Activo" : "Desactivado"}
+                  </Typography>
+                  <UpdateButton onClick={() => handleOpenModal(proveedor)}>
+                    Actualizar
+                  </UpdateButton>
+                  {proveedor.activo_proveedor ? (
+                    <DeactivateButton onClick={() => handleDeactivate(proveedor._id)}>
+                      Desactivar
+                    </DeactivateButton>
+                  ) : (
+                    <ActivateButton onClick={() => handleActivate(proveedor._id)}>
+                      Activar
+                    </ActivateButton>
+                  )}
+                  <DeleteButton onClick={() => handleDelete(proveedor._id)}>
+                    Eliminar
+                  </DeleteButton>
+                </CardContent>
+              </StyledCard>
+            </Grid>
+          ))}
+        </Grid>
       </section>
-      <Grid container spacing={1}>
-        {proveedores.map((proveedor) => (
-          <Grid item xs={12} md={6} key={proveedor._id}>
-            <StyleCard>
-              <CardContent>
-                <Typography variant="h6" component="div" gutterBottom>
-                  {proveedor.nombre_proveedor}
-                </Typography>
-                <Typography variant="body2" color="textSecondary">
-                  Email: {proveedor.email_proveedor}
-                </Typography>
-                <Typography variant="body2" color="textSecondary">
-                  Celular: {proveedor.celular_proveedor}
-                </Typography>
-                <Typography variant="body2"
-                  style={{ color: proveedor.active_proveedor ? "#4caf50" : "#f44336" }}
-                  fontWeight="bold"
-                >
-                  {proveedor.active_proveedor ? "Activo" : "Desactivado"}
-                </Typography>
-                <Button onClick={() => handleOpenModal(proveedor)}>Actualizar</Button>
-                <UpdateButton />
-                <DeactivatedButton onClick={() => handleDeactivate(proveedor._id)}>Desactivar</DeactivatedButton>
-                <ActivatedButton onClick={() => handleActivate(proveedor._id)}>Activar</ActivatedButton>
-                <DeleteButton onClick={() => handleDelete(proveedor._id)}>Eliminar</DeleteButton>
-              </CardContent>
-            </StyleCard>
-          </Grid>
-        ))}
-      </Grid>
       <Dialog open={openModal} onClose={handleCloseModal}>
-        <DialogTitle>{actionType === 'create' ? 'Crear Proveedor' : 'Actualizar Proveedor'}</DialogTitle>
+        <DialogTitle>{actionType === 'create' ? "Crear Proveedor" : "Actualizar Proveedor"}</DialogTitle>
         <DialogContent>
           <TextField
             fullWidth
@@ -194,10 +298,11 @@ const ListaProveedores = () => {
         <DialogActions>
           <Button onClick={handleCloseModal} color="secondary">Cancelar</Button>
           <Button onClick={handleSaveProveedor} color="primary">
-            {actionType === 'create' ? 'Crear' : 'Actualizar'}
+            {actionType === 'create' ? "Crear" : "Actualizar"}
           </Button>
         </DialogActions>
       </Dialog>
+      {/* Snackbar para mensajes */}
       <Snackbar open={openSnackbar} autoHideDuration={3000} onClose={handleCloseSnackbar}>
         <Alert severity={errorMessage ? "error" : "success"} onClose={handleCloseSnackbar}>
           {errorMessage || "Operación exitosa"}
@@ -205,6 +310,6 @@ const ListaProveedores = () => {
       </Snackbar>
     </Container>
   );
-};
+}
 
-export default ListaProveedores;
+export default ProveedorLista;

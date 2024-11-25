@@ -1,6 +1,6 @@
 'use client'
 import React from "react"
-// import type { AppProps } from "next/app"
+import type { AppProps } from "next/app"
 import ProveedorLista from "./proveedores/lista/ListaProveedores";
 import styled from "../page.module.css";
 
