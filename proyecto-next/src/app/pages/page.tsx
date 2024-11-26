@@ -3,6 +3,7 @@ import React from "react"
 import type { AppProps } from "next/app"
 import ProveedorLista from "./proveedores/lista/ListaProveedores";
 import styled from "../page.module.css";
+import ClienteLista from "./clientes/lista/ListaClientes";
 
 
 export default function HomePage()  {
@@ -22,6 +23,7 @@ export default function HomePage()  {
             </footer>
 
             <ProveedorLista />
+            <ClienteLista />
         </div>
     );
 }
