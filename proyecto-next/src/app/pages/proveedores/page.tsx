@@ -10,7 +10,7 @@ export default function ProveedoresPage() {
   useEffect(() => {
     const cargarProveedores = async () => {
       try {
-        const data = await fetchApi(API_CONFIG.endpoints.clientes.base) as Proveedor[];
+        const data = await fetchApi<Proveedor[]>(API_CONFIG.endpoints.proveedores.base);
         setProveedores(data);
       } catch (error) {
         console.error('Error al cargar proveedores:', error);
@@ -23,11 +23,10 @@ export default function ProveedoresPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold mb-6">Gestión de Proveedores</h1>
-      {/* Mostrar la lista de proveedores */}
       {proveedores.length > 0 ? (
         <ul>
           {proveedores.map((proveedor) => (
-            <li key={proveedor.id}>{proveedor.nombre}</li>
+            <li key={proveedor.id}>{proveedor.nombre_proveedor}</li>
           ))}
         </ul>
       ) : (
