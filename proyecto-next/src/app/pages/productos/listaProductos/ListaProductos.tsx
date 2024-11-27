@@ -80,9 +80,19 @@ const ProductosLista: React.FC = () => {
   };
 
   const obtenerProductos = async () => {
-    const response = await fetch('http://localhost:2000/api/productos');
-    const data = await response.json();
-    setProductos(data);
+    try {
+        const response = await fetch('http://localhost:2000/api/productos');
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(`Error ${response.status}: ${errorData.message}`);
+        }
+        const data = await response.json();
+        setProductos(data);
+    } catch (error: any) {
+        console.error('Error al obtener productos:', error);
+        setErrorMessage(error.message || 'Error desconocido');
+        setOpenSnackbar(true);
+    }
   };
 
   const crearProducto = async (data: Omit<Productos, '_id'>) => {
@@ -307,7 +317,7 @@ const ProductosLista: React.FC = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {productos.map((producto) => (
+            {Array.isArray(productos) && productos.map((producto) => (
               <TableRow key={producto._id}>
                 <TableCell>{producto.nombre_producto}</TableCell>
                 <TableCell>{producto.cantidad}</TableCell>
