@@ -1,9 +1,11 @@
-import ProveedorLista from "./lista/ListaProveedores";
-
-export default function ProveedoresPage() {
-  return (
+import ProveedorLista from "./lista/ListaProveedores"
+export default function ProveedoresPage()
+{
+    return (
     <div>
-      <ProveedorLista />
+    
+    <ProveedorLista/>
     </div>
-  );
+    )
+    
 }

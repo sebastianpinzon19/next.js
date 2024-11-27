@@ -19,29 +19,29 @@ import { styled } from "@mui/system";
 
 // Estilo para las tarjetas dinámicas
 const StyledCard = styled(Card)(({ theme }) => ({
-  transform: "transform 0.3s ease, box-shadow 0.3s ease",
+  transition: "transform 0.3s ease, box-shadow 0.3s ease",
   "&:hover": {
-    transform: "translateY(-5px)", // Movimiento suave al hacer hover
+    transform: "translateY(-8px)", // Movimiento suave al hover
   },
-  height: "100%", // Altura completa en pantallas pequeñas
-  minHeight: "200px",
+  width: "100%", // Ancho completo en pantallas pequeñas
+  marginBottom: theme.spacing(3),
   borderRadius: "20px", // Bordes más redondeados
-  backgroundColor: "#fff", // Fondo suave para las tarjetas
-  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // Sombra suave
-  [theme.breakpoints.up("s")]: {
-    margin: "8px", // Divide los elementos medianos y grandes
+  backgroundColor: "#f9f9f9", // Fondo suave para las tarjetas
+  padding: theme.spacing(3), // Espaciado interno
+  [theme.breakpoints.up("md")]: {
+    width: "75%", // Ancho más grande en pantallas medianas y grandes
+    margin: "auto", // Centrado horizontal en pantallas más grandes
   },
-  margin: "auto", // Centrado horizontal en pantallas más grandes
 }));
 
 // Estilo para los botones de acción personalizados
 const ActionButton = styled(Button)(({ theme }) => ({
   margin: theme.spacing(1),
-  padding: theme.spacing(1),
+  padding: theme.spacing(1.5),
   fontSize: "0.875rem",
-  minHeight: "36px",
+  fontWeight: "bold",
   textTransform: "none",
-  borderRadius: "18px",
+  borderRadius: "10px",
   transition: "background-color 0.3s ease",
 }));
 
@@ -54,15 +54,15 @@ const ActivateButton = styled(ActionButton)({
 });
 
 const DeactivateButton = styled(ActionButton)({
-  backgroundColor: "#f44336",
+  backgroundColor: "#ff9800",
   color: "#fff",
   "&:hover": {
-    backgroundColor: "#d32f2b",
+    backgroundColor: "#f57c00",
   },
 });
 
 const DeleteButton = styled(ActionButton)({
-  backgroundColor: "#ff4400",
+  backgroundColor: "#f44336",
   color: "#fff",
   "&:hover": {
     backgroundColor: "#d32f2f",
@@ -81,15 +81,15 @@ const ProveedorLista = () => {
   const [proveedores, setProveedores] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [formValues, setFormValues] = useState({
-    nombre: "",
-    mail_proveedor: "",
+    nombre_proveedor: "",
+    email_proveedor: "",
     celular_proveedor: "",
     activo_proveedor: true,
   });
-  const [selectedProveedor, setSelectedProveedor] = useState(null);
+  const [selectedProveedor, setSelectedProveedor] = useState<any>(null);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [actionType, setActionType] = useState('create');
+  const [actionType, setActionType] = useState<'create' | 'update'>('create');
 
   useEffect(() => {
     fetchProveedores();
@@ -98,18 +98,17 @@ const ProveedorLista = () => {
   const fetchProveedores = async () => {
     try {
       const respuesta = await fetch('http://localhost:2000/api/proveedores');
+      if (!respuesta.ok) throw new Error('Error al obtener todos los proveedores');
       const data = await respuesta.json();
-      if (respuesta.ok) {
-        setProveedores(data);
-      }
+      setProveedores(data);
     } catch (error) {
-      console.error('Error al obtener los proveedores:', error);
+      console.error('Error al obtener los proveedores: ', error);
       setErrorMessage('Error al obtener los proveedores');
       setOpenSnackbar(true);
     }
-  }
+  };
 
-  const handleOpenModal = (proveedor = null) => {
+  const handleOpenModal = (proveedor: any = null) => {
     setSelectedProveedor(proveedor);
     if (proveedor) {
       setFormValues({
@@ -136,7 +135,7 @@ const ProveedorLista = () => {
     setSelectedProveedor(null);
   };
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: any) => {
     const { name, value } = e.target;
     setFormValues({
       ...formValues,
@@ -151,14 +150,14 @@ const ProveedorLista = () => {
       if (actionType === 'create') {
         url = 'http://localhost:2000/api/proveedores';
         method = 'POST';
-      } else {
-        url = `http://localhost:2000/api/proveedores/update/${selectedProveedor.id}`;
+      } else if (actionType === 'update') {
+        url = `http://localhost:2000/api/proveedores/update/${selectedProveedor._id}`;
         method = 'PUT';
       }
-      const response = await fetch(url, {
+      const response = await fetch(`${url}`, {
         method: method,
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formValues),
       });
@@ -169,36 +168,36 @@ const ProveedorLista = () => {
       fetchProveedores();
       handleCloseModal();
     } catch (error) {
-      console.error('Error al guardar el proveedor:', error);
-      setErrorMessage('Error al guardar el proveedor');
+      console.error("Error al guardar el proveedor:", error);
+      setErrorMessage("Error al guardar el proveedor");
       setOpenSnackbar(true);
     }
   };
 
-  const handleActivate = async function(id) {
+  const handleActivate = async (id: string) => {
     try {
       await fetch(`http://localhost:2000/api/proveedores/active/${id}`, { method: 'PUT' });
       fetchProveedores();
     } catch (error) {
-      console.error('Error al activar el proveedor:', error);
+      console.error("Error al activar el proveedor:", error);
     }
   };
 
-  const handleDeactivate = async function(id) {
+  const handleDeactivate = async (id: string) => {
     try {
       await fetch(`http://localhost:2000/api/proveedores/deactive/${id}`, { method: 'PUT' });
       fetchProveedores();
     } catch (error) {
-      console.error('Error al desactivar el proveedor:', error);
+      console.error("Error al desactivar el proveedor:", error);
     }
   };
 
-  const handleDelete = async function(id) {
+  const handleDelete = async (id: string) => {
     try {
       await fetch(`http://localhost:2000/api/proveedores/delete/${id}`, { method: 'DELETE' });
       fetchProveedores();
     } catch (error) {
-      console.error('Error al eliminar el proveedor:', error);
+      console.error("Error al eliminar el proveedor:", error);
     }
   };
 
@@ -224,7 +223,7 @@ const ProveedorLista = () => {
           Crear Proveedor
         </Button>
         <Grid container spacing={4}>
-          {proveedores.map((proveedor) => (
+          {proveedores.map((proveedor: any) => (
             <Grid item xs={12} md={6} key={proveedor._id}>
               <StyledCard>
                 <CardContent>
@@ -238,8 +237,8 @@ const ProveedorLista = () => {
                     Celular: {proveedor.celular_proveedor}
                   </Typography>
                   <Typography 
-                    variant="body2"
-                    style={{
+                    variant="body2" 
+                    style={{ 
                       color: proveedor.activo_proveedor ? "#4caf50" : "#f44336", // Verde si está activo, rojo si está inactivo
                       fontWeight: "bold"
                     }}
@@ -267,6 +266,7 @@ const ProveedorLista = () => {
           ))}
         </Grid>
       </section>
+
       <Dialog open={openModal} onClose={handleCloseModal}>
         <DialogTitle>{actionType === 'create' ? "Crear Proveedor" : "Actualizar Proveedor"}</DialogTitle>
         <DialogContent>
@@ -302,6 +302,7 @@ const ProveedorLista = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
       {/* Snackbar para mensajes */}
       <Snackbar open={openSnackbar} autoHideDuration={3000} onClose={handleCloseSnackbar}>
         <Alert severity={errorMessage ? "error" : "success"} onClose={handleCloseSnackbar}>
@@ -310,6 +311,6 @@ const ProveedorLista = () => {
       </Snackbar>
     </Container>
   );
-}
+};
 
 export default ProveedorLista;
