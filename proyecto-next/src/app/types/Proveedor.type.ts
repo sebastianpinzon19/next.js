@@ -1,4 +1,4 @@
-export interface Proveedor{
+export interface Proveedores {
     id_proveedor: string;
     nombre_proveedor: string;
     email_proveedor: string;

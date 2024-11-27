@@ -4,6 +4,8 @@ import "./globals.css";
 import "./components/navbar/Navbar"
 import Navbar from "./components/navbar/Navbar";
 
+
+
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",

@@ -3,17 +3,15 @@ import React from "react"
 import type { AppProps } from "next/app"
 import ProveedorLista from "./proveedores/lista/ListaProveedores";
 import styled from "../page.module.css";
-
+import ClienteLista from "./clientes/lista/ListaClientes";
+import ProductoLista from "./productos/listaProductos/ListaProductos";
 
 export default function HomePage()  {
     return (
         <div className={styled.page}>
 
-            {/*Aqui colocamos el navbar para que aparezca en la pagina de Home*/}
-
-
             <main className={styled.main}>
-                <h1>bienvenido a mi pagina de inicio</h1>
+                <h1>bienvenido a mi pagina de iniHcio</h1>
                 {/*agrega el contenido de tu pagina aqui */}
             </main>
 
@@ -22,6 +20,8 @@ export default function HomePage()  {
             </footer>
 
             <ProveedorLista />
+            <ClienteLista />
+            <ProductoLista />
         </div>
     );
 }
