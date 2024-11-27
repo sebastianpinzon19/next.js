@@ -6,11 +6,10 @@ export declare class ClientesController {
     private readonly clientesService;
     constructor(clientesService: ClientesService);
     create(createClientesDto: CreateClientesDto): Promise<Clientes>;
-    findOne(id: string): Promise<Clientes>;
     findAll(): Promise<Clientes[]>;
-    active(id: string): Promise<void>;
+    findOne(id: string): Promise<Clientes>;
     update(id: string, updateClientesDto: UpdateClientesDto): Promise<Clientes>;
-    updatePartial(id: string, updateClientesDto: Partial<UpdateClientesDto>): Promise<Clientes>;
     remove(id: string): Promise<void>;
     deactivate(id: string): Promise<void>;
+    active(id: string): Promise<void>;
 }

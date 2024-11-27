@@ -1,10 +1,3 @@
-'use client';
-import ClienteLista from "./lista/ListaClientes";
-
-export default function ClientePage() {
-    return (
-        <div>
-            <ClienteLista />
-        </div>
-    );
+export default function ClientesPage() {
+    return <div>Clientes</div>;
 }

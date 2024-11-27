@@ -17,36 +17,23 @@ const common_1 = require("@nestjs/common");
 const update_clientes_dto_1 = require("../dto/update-clientes.dto");
 const create_clientes_dto_1 = require("../dto/create-clientes.dto");
 const cliente_service_1 = require("../service/cliente.service");
+const cliente_schema_1 = require("../schema/cliente.schema");
 const swagger_1 = require("@nestjs/swagger");
 let ClientesController = class ClientesController {
     constructor(clientesService) {
         this.clientesService = clientesService;
     }
     async create(createClientesDto) {
-        return this.clientesService.createCliente(createClientesDto);
-    }
-    async findOne(id) {
-        return await this.clientesService.findOne(id);
+        return await this.clientesService.createCliente(createClientesDto);
     }
     async findAll() {
         return await this.clientesService.findAll();
     }
-    async active(id) {
-        await this.clientesService.active(id);
+    async findOne(id) {
+        return await this.clientesService.findOne(id);
     }
     async update(id, updateClientesDto) {
-        const updatedCliente = await this.clientesService.update(id, updateClientesDto);
-        if (!updatedCliente) {
-            throw new common_1.NotFoundException(`Cliente con ID ${id} no encontrado`);
-        }
-        return updatedCliente;
-    }
-    async updatePartial(id, updateClientesDto) {
-        const updatedPartialCliente = await this.clientesService.updatePartial(id, updateClientesDto);
-        if (!updatedPartialCliente) {
-            throw new common_1.NotFoundException(`Cliente con ID ${id} no encontrado`);
-        }
-        return updatedPartialCliente;
+        return await this.clientesService.update(id, updateClientesDto);
     }
     async remove(id) {
         await this.clientesService.delete(id);
@@ -54,24 +41,28 @@ let ClientesController = class ClientesController {
     async deactivate(id) {
         await this.clientesService.deactivate(id);
     }
+    async active(id) {
+        await this.clientesService.active(id);
+    }
 };
 exports.ClientesController = ClientesController;
 __decorate([
     (0, common_1.Post)(),
     (0, swagger_1.ApiOperation)({ summary: 'Crear un nuevo cliente' }),
-    (0, swagger_1.ApiResponse)({ status: 201, description: 'Cliente creado con éxito' }),
-    (0, swagger_1.ApiResponse)({ status: 400, description: 'Solicitud incorrecta' }),
+    (0, swagger_1.ApiResponse)({ status: 201, description: 'Cliente creado con éxito', type: cliente_schema_1.Clientes }),
+    (0, swagger_1.ApiResponse)({ status: 400, description: 'Error en la creación del cliente' }),
     (0, swagger_1.ApiBody)({
-        description: 'Datos necesarios para crear un nuevo cliente',
+        description: 'Datos del cliente a crear',
+        type: create_clientes_dto_1.CreateClientesDto,
         examples: {
             example: {
                 summary: 'Ejemplo de creación de cliente',
                 value: {
-                    numero_identificacion: '123456789',
+                    numero_identificacion: '12345678',
                     nombre_cliente: 'Juan Pérez',
-                    email_cliente: 'juan.perez@gmail.com',
-                    celular_cliente: '555-1234',
-                    activo_cliente: true
+                    email_cliente: 'juan.perez@example.com',
+                    celular_cliente: '555-5555',
+                    activo_cliente: true,
                 },
             },
         },
@@ -82,9 +73,17 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ClientesController.prototype, "create", null);
 __decorate([
+    (0, common_1.Get)(),
+    (0, swagger_1.ApiOperation)({ summary: 'Obtener todos los clientes' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Lista de clientes', type: [cliente_schema_1.Clientes] }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], ClientesController.prototype, "findAll", null);
+__decorate([
     (0, common_1.Get)(':id'),
     (0, swagger_1.ApiOperation)({ summary: 'Obtener un cliente por ID' }),
-    (0, swagger_1.ApiResponse)({ status: 200, description: 'Cliente encontrado' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Cliente encontrado', type: cliente_schema_1.Clientes }),
     (0, swagger_1.ApiResponse)({ status: 404, description: 'Cliente no encontrado' }),
     (0, swagger_1.ApiParam)({
         name: 'id',
@@ -97,43 +96,19 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ClientesController.prototype, "findOne", null);
 __decorate([
-    (0, common_1.Get)(),
-    (0, swagger_1.ApiOperation)({ summary: 'Obtener la lista de todos los clientes' }),
-    (0, swagger_1.ApiResponse)({ status: 200, description: 'Lista de clientes obtenida con éxito' }),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", Promise)
-], ClientesController.prototype, "findAll", null);
-__decorate([
-    (0, common_1.Put)('active/:id'),
-    (0, swagger_1.ApiOperation)({ summary: 'Activar un cliente por ID' }),
-    (0, swagger_1.ApiResponse)({ status: 200, description: 'Cliente activado con éxito' }),
-    (0, swagger_1.ApiResponse)({ status: 404, description: 'Cliente no encontrado' }),
-    (0, swagger_1.ApiParam)({
-        name: 'id',
-        description: 'ID del cliente que deseas activar',
-        type: String,
-    }),
-    __param(0, (0, common_1.Param)('id')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Promise)
-], ClientesController.prototype, "active", null);
-__decorate([
-    (0, common_1.Put)('update/:id'),
+    (0, common_1.Patch)(':id'),
     (0, swagger_1.ApiOperation)({ summary: 'Actualizar un cliente por ID' }),
-    (0, swagger_1.ApiResponse)({ status: 200, description: 'Cliente actualizado con éxito' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Cliente actualizado', type: cliente_schema_1.Clientes }),
     (0, swagger_1.ApiResponse)({ status: 404, description: 'Cliente no encontrado' }),
     (0, swagger_1.ApiBody)({
-        description: 'Datos necesarios para actualizar un cliente',
+        description: 'Datos del cliente a actualizar',
+        type: update_clientes_dto_1.UpdateClientesDto,
         examples: {
             example: {
                 summary: 'Ejemplo de actualización de cliente',
                 value: {
                     nombre_cliente: 'Juan Pérez Actualizado',
-                    email_cliente: 'nuevo.email@gmail.com',
-                    celular_cliente: '555-9876',
-                    activo_cliente: false
+                    email_cliente: 'juan.perez.actualizado@example.com',
                 },
             },
         },
@@ -145,28 +120,6 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ClientesController.prototype, "update", null);
 __decorate([
-    (0, common_1.Patch)('updatePartial/:id'),
-    (0, swagger_1.ApiOperation)({ summary: 'Actualizar parcialmente un cliente por ID' }),
-    (0, swagger_1.ApiResponse)({ status: 200, description: 'Cliente actualizado parcialmente con éxito' }),
-    (0, swagger_1.ApiResponse)({ status: 404, description: 'Cliente no encontrado' }),
-    (0, swagger_1.ApiBody)({
-        description: 'Datos necesarios para una actualización parcial del cliente',
-        examples: {
-            example: {
-                summary: 'Ejemplo de actualización parcial',
-                value: {
-                    celular_cliente: '555-5555',
-                },
-            },
-        },
-    }),
-    __param(0, (0, common_1.Param)('id')),
-    __param(1, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object]),
-    __metadata("design:returntype", Promise)
-], ClientesController.prototype, "updatePartial", null);
-__decorate([
     (0, common_1.Delete)('delete/:id'),
     (0, swagger_1.ApiOperation)({ summary: 'Eliminar un cliente por ID' }),
     (0, swagger_1.ApiResponse)({ status: 204, description: 'Cliente eliminado con éxito' }),
@@ -176,15 +129,26 @@ __decorate([
         description: 'ID del cliente que deseas eliminar',
         type: String,
     }),
+    (0, swagger_1.ApiBody)({
+        description: 'No se requiere cuerpo para eliminar un cliente',
+        examples: {
+            example: {
+                summary: 'Ejemplo de eliminación de cliente',
+                value: {
+                    message: 'Cliente eliminado con éxito',
+                },
+            },
+        },
+    }),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], ClientesController.prototype, "remove", null);
 __decorate([
-    (0, common_1.Put)('deactivate/:id'),
+    (0, common_1.Patch)('deactivate/:id'),
     (0, swagger_1.ApiOperation)({ summary: 'Desactivar un cliente por ID' }),
-    (0, swagger_1.ApiResponse)({ status: 200, description: 'Cliente desactivado con éxito' }),
+    (0, swagger_1.ApiResponse)({ status: 204, description: 'Cliente desactivado con éxito' }),
     (0, swagger_1.ApiResponse)({ status: 404, description: 'Cliente no encontrado' }),
     (0, swagger_1.ApiParam)({
         name: 'id',
@@ -196,6 +160,21 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], ClientesController.prototype, "deactivate", null);
+__decorate([
+    (0, common_1.Patch)('active/:id'),
+    (0, swagger_1.ApiOperation)({ summary: 'Activar un cliente por ID' }),
+    (0, swagger_1.ApiResponse)({ status: 204, description: 'Cliente activado con éxito' }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: 'Cliente no encontrado' }),
+    (0, swagger_1.ApiParam)({
+        name: 'id',
+        description: 'ID del cliente que deseas activar',
+        type: String,
+    }),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], ClientesController.prototype, "active", null);
 exports.ClientesController = ClientesController = __decorate([
     (0, swagger_1.ApiTags)('clientes'),
     (0, common_1.Controller)('clientes'),

@@ -57,6 +57,7 @@ const ClienteLista = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     fetchClientes();
@@ -70,7 +71,8 @@ const ClienteLista = () => {
       setClientes(data);
     } catch (error) {
       console.error('Error:', error);
-      showSnackbar('Error al cargar los clientes', 'error');
+      setErrorMessage('Error al obtener los clientes');
+      setOpenSnackbar(true);
     }
   };
 

@@ -3,7 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ProveedoresModule } from './proveedores/proveedores.module';
 import { ClientesModule } from './clientes/clientes.module';
 import { ProductosModule } from './productos/productos.module';
-import { MongoClient, ServerApiVersion } from 'mongodb';
+
 
 @Module({
   imports: [

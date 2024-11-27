@@ -39,7 +39,7 @@ export class ProductosServices{
         return findOneProducto;
     }
 
-    async udpate(id: string, updateProductosDto: UpdateProductosDto): Promise<Productos>{
+    async update(id: string, updateProductosDto: UpdateProductosDto): Promise<Productos>{
         const updateProducto = await this.productosModel.findByIdAndUpdate(
             id,
             updateProductosDto,
@@ -52,7 +52,7 @@ export class ProductosServices{
     }
 
 
-    async udpatePartial(id: string, updateProductosDto: UpdateProductosDto): Promise<Productos>{
+    async updatePartial(id: string, updateProductosDto: UpdateProductosDto): Promise<Productos>{
         const updatePartialProducto = await this.productosModel.findByIdAndUpdate(
             id,
             updateProductosDto,

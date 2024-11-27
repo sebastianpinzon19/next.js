@@ -27,31 +27,41 @@ let ProveedoresController = class ProveedoresController {
         return this.proveedoresService.createProveedor(createProveedorDto);
     }
     async deactive(id) {
-        await this.proveedoresService.deactive(id);
+        const result = await this.proveedoresService.deactive(id);
+        if (result === null) {
+            throw new common_1.NotFoundException(`Proveedor con Id ${id} no encontrado`);
+        }
     }
     async active(id) {
         await this.proveedoresService.active(id);
     }
     async delete(id) {
-        await this.proveedoresService.delete(id);
+        const result = await this.proveedoresService.delete(id);
+        if (result === null) {
+            throw new common_1.NotFoundException(`Proveedor con Id ${id} no encontrado`);
+        }
     }
     async findAll() {
         return await this.proveedoresService.findAll();
     }
     async findOne(id) {
-        return await this.proveedoresService.findOne(id);
+        const proveedor = await this.proveedoresService.findOne(id);
+        if (!proveedor) {
+            throw new common_1.NotFoundException(`Proveedor con Id ${id} no encontrado`);
+        }
+        return proveedor;
     }
     async update(id, updateProveedoresDto) {
         const updateProveedor = await this.proveedoresService.update(id, updateProveedoresDto);
         if (!updateProveedor) {
-            throw new common_1.NotFoundException(`Proveedor con Id ${id} no se encontró`);
+            throw new common_1.NotFoundException(`Proveedor con Id ${id} no encontrado`);
         }
         return updateProveedor;
     }
     async updatePartial(id, updateProveedoresDto) {
         const updatePartialProveedor = await this.proveedoresService.updatePartial(id, updateProveedoresDto);
         if (!updatePartialProveedor) {
-            throw new common_1.NotFoundException(`Proveedor con Id ${id} no se encontró`);
+            throw new common_1.NotFoundException(`Proveedor con Id ${id} no encontrado`);
         }
         return updatePartialProveedor;
     }
@@ -84,8 +94,7 @@ __decorate([
     (0, common_1.Put)('deactive/:id'),
     (0, swagger_1.ApiOperation)({ summary: 'Desactivar un proveedor' }),
     (0, swagger_1.ApiResponse)({ status: 204, description: 'Proveedor desactivado' }),
-    (0, swagger_1.ApiResponse)({ status: 400, description: 'No se encuentra el proveedor' }),
-    (0, swagger_1.ApiResponse)({ status: 404, description: 'Solicitud incorrecta' }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: 'Proveedor no encontrado' }),
     (0, swagger_1.ApiParam)({
         name: 'id',
         required: true,
@@ -101,8 +110,7 @@ __decorate([
     (0, common_1.Put)('active/:id'),
     (0, swagger_1.ApiOperation)({ summary: 'Activar un proveedor' }),
     (0, swagger_1.ApiResponse)({ status: 204, description: 'Proveedor activado' }),
-    (0, swagger_1.ApiResponse)({ status: 400, description: 'No se encuentra el proveedor' }),
-    (0, swagger_1.ApiResponse)({ status: 404, description: 'Solicitud incorrecta' }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: 'Proveedor no encontrado' }),
     (0, swagger_1.ApiParam)({
         name: 'id',
         required: true,
@@ -118,8 +126,7 @@ __decorate([
     (0, common_1.Delete)('delete/:id'),
     (0, swagger_1.ApiOperation)({ summary: 'Eliminar un proveedor' }),
     (0, swagger_1.ApiResponse)({ status: 204, description: 'Proveedor eliminado' }),
-    (0, swagger_1.ApiResponse)({ status: 400, description: 'No se encuentra el proveedor' }),
-    (0, swagger_1.ApiResponse)({ status: 404, description: 'Solicitud incorrecta' }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: 'Proveedor no encontrado' }),
     (0, swagger_1.ApiParam)({
         name: 'id',
         required: true,
@@ -135,7 +142,7 @@ __decorate([
     (0, common_1.Get)(),
     (0, swagger_1.ApiOperation)({ summary: 'Obtener todos los proveedores' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Lista de proveedores', type: [proveedores_schema_1.Proveedores] }),
-    (0, swagger_1.ApiResponse)({ status: 404, description: 'Paises no encontrados' }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: 'No se encontraron proveedores' }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
@@ -143,9 +150,8 @@ __decorate([
 __decorate([
     (0, common_1.Get)(':id'),
     (0, swagger_1.ApiOperation)({ summary: 'Obtener un proveedor por su Id' }),
-    (0, swagger_1.ApiResponse)({ status: 204, description: 'Proveedor encontrado' }),
-    (0, swagger_1.ApiResponse)({ status: 400, description: 'No se encuentra el proveedor' }),
-    (0, swagger_1.ApiResponse)({ status: 404, description: 'Solicitud incorrecta' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Proveedor encontrado', type: proveedores_schema_1.Proveedores }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: 'Proveedor no encontrado' }),
     (0, swagger_1.ApiParam)({
         name: 'id',
         required: true,
@@ -160,11 +166,10 @@ __decorate([
 __decorate([
     (0, common_1.Put)('update/:id'),
     (0, swagger_1.ApiOperation)({ summary: 'Actualizar un proveedor' }),
-    (0, swagger_1.ApiResponse)({ status: 201, description: 'El proveedor ha sido actualizado' }),
-    (0, swagger_1.ApiResponse)({ status: 400, description: 'No se encuentra el proveedor' }),
-    (0, swagger_1.ApiResponse)({ status: 404, description: 'Solicitud incorrecta' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'El proveedor ha sido actualizado', type: proveedores_schema_1.Proveedores }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: 'Proveedor no encontrado' }),
     (0, swagger_1.ApiBody)({
-        description: 'Cuerpo de solicitud para actualizar un nuevo proveedor',
+        description: 'Cuerpo de solicitud para actualizar un proveedor',
         examples: {
             example: {
                 summary: 'Ejemplo de actualización',
@@ -185,14 +190,13 @@ __decorate([
 __decorate([
     (0, common_1.Patch)('updatePartial/:id'),
     (0, swagger_1.ApiOperation)({ summary: 'Actualizar un proveedor parcialmente' }),
-    (0, swagger_1.ApiResponse)({ status: 201, description: 'El proveedor ha sido actualizado' }),
-    (0, swagger_1.ApiResponse)({ status: 400, description: 'No se encuentra el proveedor' }),
-    (0, swagger_1.ApiResponse)({ status: 404, description: 'Solicitud incorrecta' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'El proveedor ha sido actualizado', type: proveedores_schema_1.Proveedores }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: 'Proveedor no encontrado' }),
     (0, swagger_1.ApiBody)({
-        description: 'Cuerpo de solicitud para actualizar un nuevo proveedor',
+        description: 'Cuerpo de solicitud para actualizar un proveedor parcialmente',
         examples: {
             example: {
-                summary: 'Ejemplo de actualización',
+                summary: 'Ejemplo de actualización parcial',
                 value: {
                     nombre_proveedor: 'Proveedor_actualizacionParcial',
                     email_proveedor: 'proveedordupdateparcial@gmail.com',

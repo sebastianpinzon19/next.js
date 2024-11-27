@@ -11,6 +11,7 @@ const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const proveedores_schema_1 = require("./schema/proveedores.schema");
 const proveedores_service_1 = require("./service/proveedores.service");
+const proveedores_controller_1 = require("./controller/proveedores.controller");
 let ProveedoresModule = class ProveedoresModule {
 };
 exports.ProveedoresModule = ProveedoresModule;
@@ -21,6 +22,7 @@ exports.ProveedoresModule = ProveedoresModule = __decorate([
         ],
         providers: [proveedores_service_1.ProveedoresServices],
         exports: [proveedores_service_1.ProveedoresServices],
+        controllers: [proveedores_controller_1.ProveedoresController],
     })
 ], ProveedoresModule);
 //# sourceMappingURL=proveedores.module.js.map

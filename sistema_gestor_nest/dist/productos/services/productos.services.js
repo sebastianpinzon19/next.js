@@ -40,7 +40,7 @@ let ProductosServices = class ProductosServices {
         }
         return findOneProducto;
     }
-    async udpate(id, updateProductosDto) {
+    async update(id, updateProductosDto) {
         const updateProducto = await this.productosModel.findByIdAndUpdate(id, updateProductosDto, { new: true })
             .exec();
         if (!updateProducto) {
@@ -48,7 +48,7 @@ let ProductosServices = class ProductosServices {
         }
         return updateProducto;
     }
-    async udpatePartial(id, updateProductosDto) {
+    async updatePartial(id, updateProductosDto) {
         const updatePartialProducto = await this.productosModel.findByIdAndUpdate(id, updateProductosDto, { new: true })
             .exec();
         if (!updatePartialProducto) {

@@ -11,8 +11,8 @@ export declare class ProductosControllers {
     delete(id: string): Promise<void>;
     findAll(): Promise<Productos[]>;
     findOne(id: string): Promise<Productos>;
-    udpate(id: string, updateProductosDto: UpdateProductosDto): Promise<Productos>;
-    udpatePartial(id: string, updateProductosDto: UpdateProductosDto): Promise<Productos>;
+    update(id: string, updateProductosDto: UpdateProductosDto): Promise<Productos>;
+    updatePartial(id: string, updateProductosDto: UpdateProductosDto): Promise<Productos>;
     agregarProveedorProducto(productoId: string, proveedorId: string): Promise<Productos>;
     eliminarProveedorProducto(productoId: string, proveedorId: string): Promise<Productos>;
     agregarClienteAProducto(productoId: string, clienteId: string): Promise<Productos>;

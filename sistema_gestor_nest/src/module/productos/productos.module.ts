@@ -4,6 +4,7 @@ import { ProductosServices } from './services/productos.services';
 import { ProveedoresModule } from 'src/module/proveedores/proveedores.module';
 import { ClientesModule } from 'src/module/clientes/clientes.module';
 import { Productos, ProductoSchema } from './schema/productos.schema';
+import { ProductosControllers } from './controllers/productos.controllers';
 
 @Module({
   imports: [
@@ -13,5 +14,7 @@ import { Productos, ProductoSchema } from './schema/productos.schema';
   ],
   providers: [ProductosServices],
   exports: [ProductosServices],
+  controllers: [ProductosControllers],
+
 })
 export class ProductosModule {}

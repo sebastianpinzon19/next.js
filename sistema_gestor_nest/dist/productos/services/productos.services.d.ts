@@ -12,8 +12,8 @@ export declare class ProductosServices {
     createProducto(createProductosDto: CreateProductoDto): Promise<Productos>;
     findAllProdutos(): Promise<Productos[]>;
     findOne(id: string): Promise<Productos>;
-    udpate(id: string, updateProductosDto: UpdateProductosDto): Promise<Productos>;
-    udpatePartial(id: string, updateProductosDto: UpdateProductosDto): Promise<Productos>;
+    update(id: string, updateProductosDto: UpdateProductosDto): Promise<Productos>;
+    updatePartial(id: string, updateProductosDto: UpdateProductosDto): Promise<Productos>;
     deactive(id: string): Promise<void>;
     active(id: string): Promise<void>;
     delete(id: string): Promise<void>;

@@ -13,6 +13,7 @@ const productos_services_1 = require("./services/productos.services");
 const proveedores_module_1 = require("../proveedores/proveedores.module");
 const clientes_module_1 = require("../clientes/clientes.module");
 const productos_schema_1 = require("./schema/productos.schema");
+const productos_controllers_1 = require("./controllers/productos.controllers");
 let ProductosModule = class ProductosModule {
 };
 exports.ProductosModule = ProductosModule;
@@ -25,6 +26,7 @@ exports.ProductosModule = ProductosModule = __decorate([
         ],
         providers: [productos_services_1.ProductosServices],
         exports: [productos_services_1.ProductosServices],
+        controllers: [productos_controllers_1.ProductosControllers],
     })
 ], ProductosModule);
 //# sourceMappingURL=productos.module.js.map

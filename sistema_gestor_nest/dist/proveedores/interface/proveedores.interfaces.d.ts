@@ -5,3 +5,7 @@ export interface IProveedores {
     celular_proveedor: string;
     activo_proveedor?: boolean;
 }
+export interface Proveedor {
+    id: number;
+    nombre: string;
+}

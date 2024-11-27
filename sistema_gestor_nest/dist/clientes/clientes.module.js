@@ -11,6 +11,7 @@ const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const cliente_service_1 = require("./service/cliente.service");
 const cliente_schema_1 = require("./schema/cliente.schema");
+const clientes_controller_1 = require("./controller/clientes.controller");
 let ClientesModule = class ClientesModule {
 };
 exports.ClientesModule = ClientesModule;
@@ -21,6 +22,7 @@ exports.ClientesModule = ClientesModule = __decorate([
         ],
         providers: [cliente_service_1.ClientesService],
         exports: [cliente_service_1.ClientesService],
+        controllers: [clientes_controller_1.ClientesController],
     })
 ], ClientesModule);
 //# sourceMappingURL=clientes.module.js.map
